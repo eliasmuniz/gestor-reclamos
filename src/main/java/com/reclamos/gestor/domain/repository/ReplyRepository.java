@@ -11,6 +11,8 @@ public interface ReplyRepository {
 
     Optional<Reply> getReply(int replyId);
 
+    Optional<List<Reply>> getRepliesByClaimId(int claimId);
+
     Reply save(Reply reply);
 
     void delete(int replyId);

@@ -30,6 +30,13 @@ public class RespuestaRepository implements ReplyRepository {
     }
 
     @Override
+    public Optional<List<Reply>> getRepliesByClaimId(int claimId) {
+        return respuestaCrudRepository.findByIdReclamo(claimId)
+                .map(reclamos -> mapper.toReplies(reclamos));
+    }
+
+
+    @Override
     public Optional<Reply> getReply(int replyId){
         return respuestaCrudRepository.findById(replyId).map(respuesta->mapper.toReply(respuesta));
     }

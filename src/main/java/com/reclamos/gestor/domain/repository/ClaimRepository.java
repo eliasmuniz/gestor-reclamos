@@ -2,6 +2,7 @@ package com.reclamos.gestor.domain.repository;
 
 
 import com.reclamos.gestor.domain.Claim;
+import com.reclamos.gestor.persistence.entity.Reclamo;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -12,6 +13,8 @@ public interface ClaimRepository {
     List<Claim> getAll();
 
     Optional<Claim> getClaim(int claimId);
+
+    Optional<List<Claim>> getClaimsByUserId(int userId);
 
     Claim save(Claim claim);
 

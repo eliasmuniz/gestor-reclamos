@@ -1,6 +1,7 @@
 package com.reclamos.gestor.persistence;
 
 import com.reclamos.gestor.domain.Claim;
+import com.reclamos.gestor.domain.User;
 import com.reclamos.gestor.domain.repository.ClaimRepository;
 import com.reclamos.gestor.persistence.crud.ReclamoCrudRepository;
 import com.reclamos.gestor.persistence.entity.Reclamo;
@@ -31,6 +32,12 @@ public class ReclamoRepository implements ClaimRepository {
     }
 
     @Override
+    public Optional<List<Claim>> getClaimsByUserId(int userId) {
+        return reclamoCrudRepository.findByIdUsuario(userId)
+                .map(reclamos -> mapper.toClaims(reclamos));
+    }
+
+    @Override
     public void delete(int productId){
         reclamoCrudRepository.deleteById(productId);
     }
@@ -40,4 +47,5 @@ public class ReclamoRepository implements ClaimRepository {
         Reclamo reclamo = mapper.toReclamo(claim);
         return mapper.toClaim(reclamoCrudRepository.save(reclamo));
     }
+
 }

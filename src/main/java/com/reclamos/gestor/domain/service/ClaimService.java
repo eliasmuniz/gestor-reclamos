@@ -22,6 +22,9 @@ public class ClaimService {
     public Optional<Claim> getClaim(int claimId){
         return claimRepository.getClaim(claimId);
     }
+    public Optional<List<Claim>> getClaimsByUserId(int userId){
+        return claimRepository.getClaimsByUserId(userId);
+    }
 
     public Claim save(Claim claim){
         return claimRepository.save(claim);

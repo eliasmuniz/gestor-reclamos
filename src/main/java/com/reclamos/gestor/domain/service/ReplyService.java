@@ -23,6 +23,11 @@ public class ReplyService {
         return replyRepository.getReply(replyId);
     }
 
+    public Optional<List<Reply>> getRepliesByClaimId(int claimId){
+        return replyRepository.getRepliesByClaimId(claimId);
+    }
+
+
     public Reply save(Reply reply){
         return replyRepository.save(reply);
     }

@@ -44,6 +44,19 @@ public class ClaimController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/findByUserId/{idUser}")
+    @ApiOperation("Get All claim by userId")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Claim not found"),
+    })
+    public ResponseEntity<List<Claim>> getClaimsByUserId(@PathVariable("idUser") int userId) {
+        return claimService.getClaimsByUserId(userId)
+                .map(purchases -> new ResponseEntity<>(purchases, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
 
     @PostMapping("/add")
     public ResponseEntity<Claim> save(@RequestBody Claim claim){

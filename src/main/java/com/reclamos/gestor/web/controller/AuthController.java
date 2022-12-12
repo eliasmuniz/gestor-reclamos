@@ -5,6 +5,7 @@ import com.reclamos.gestor.domain.Reply;
 import com.reclamos.gestor.domain.User;
 import com.reclamos.gestor.domain.dto.AuthenticationRequest;
 import com.reclamos.gestor.domain.dto.AuthenticationResponse;
+import com.reclamos.gestor.domain.dto.UserDTO;
 import com.reclamos.gestor.domain.service.UserGestorDetailsService;
 import com.reclamos.gestor.domain.service.UserService;
 import com.reclamos.gestor.web.security.JWTUtil;
@@ -24,6 +25,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -41,16 +44,36 @@ public class AuthController {
 
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> createToken(@RequestBody AuthenticationRequest request){
+    public  ResponseEntity<UserDTO> createToken(@RequestBody AuthenticationRequest request){
 
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             UserDetails userDetails = userGestorDetailsService.loadUserByUsername(request.getUsername());
             String jwt = jwtUtil.generateToken(userDetails);
 
-            //if(userService.getUserBy())
+            if(userService.getUserByEmail(request.getUsername()).isPresent()){
+                UserDTO userDTO = new UserDTO();
 
-            return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
+                userDTO.setUsername(request.getUsername());
+                userDTO.setJwt((new AuthenticationResponse(jwt)).getJwt());
+                userDTO.setUserId(userService.getUserByEmail(request.getUsername())
+                        .map(user -> user.getUserId())
+                        .orElse(null));
+
+                userDTO.setRoleId(userService.getUserByEmail(request.getUsername())
+                        .map(user -> user.getRoleId())
+                        .orElse(null));
+
+                return new ResponseEntity<>(userDTO, HttpStatus.OK);
+            }else{
+                UserDTO userDTO = new UserDTO();
+
+                userDTO.setUsername(null);
+                userDTO.setJwt(null);
+                return new ResponseEntity<>( userDTO, HttpStatus.OK);
+            }
+
+
         }catch (BadCredentialsException e){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
